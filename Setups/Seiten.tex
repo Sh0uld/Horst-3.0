@@ -1,0 +1,27 @@
+%%
+%% Seiten-Setups
+%%
+\newcommand{\LiedSetup}{ 
+                        \noindent
+                        \section{\Titel}
+                        \fancyhead[RE,LO]{\nouppercase{\Titel}}
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+                        \fancyfoot[LO,RE]{\thepage}
+}\newcommand{\AkkordeSetup}{ 
+%                        \noindent
+%                        \section{\Titel}
+                        \fancyhead[RE,LO]{\nouppercase{\Titel}}
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+%                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+                        \fancyfoot[LO,RE]{\thepage}
+}
+\newcommand{\EinSchnellesLiedSetup}{
+                        \noindent
+                        \section{\Titel}
+                        \fancyhead[RE,LO]{\nouppercase{\Titel}}
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+                        \fancyfoot[LO,RE]{\thepage}
+                        \addcontentsline{lof}{section}{\Titel}
+}   

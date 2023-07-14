@@ -1,0 +1,70 @@
+%%
+%% Akkorde
+%% Code from chords.sty
+%% Modified and extended by Paddy
+%%
+
+% Counters
+\newcounter{chords-string}
+\newcounter{chords-fret}
+
+% Variables
+\newcommand{\chordreset}{
+  \def\chordtuning{E,A,D,G,B,E}
+  \def\chordfretstart{1}
+  \def\chordfretend{4}
+}
+\chordreset
+
+% The chord environmant
+% \begin{chord}
+% \begin{chord}[D,G,D,G,H,E]
+\newenvironment{chord}
+{
+  % Chord name
+  % \chordname <chordname>
+  \newcommand{\chordname}[1]{
+    \draw node[title] at (0,0) {##1};
+  }
+
+  % A single note
+  % \single <string> <fret> <finger>
+  \newcommand{\single}[3]{
+    \draw node[single] at (##1,##2) {##3};
+  }
+  % A bar
+  % \bar <startstring> <fret> <finger>
+  \renewcommand{\bar}[3]{
+    \draw[bar] (##1,##2) -- node[midway] {##3} (1,##2);
+  }
+  % No strike
+  % \nostrike <string>
+  \newcommand{\nostrike}[1]{
+    \draw[nostrike] (##1,\chordfretstart-.5) +(-135:.2cm) -- +(45:.2cm);
+    \draw[nostrike] (##1,\chordfretstart-.5) +(135:.2cm) -- +(-45:.2cm);
+  }
+  \begin{tikzpicture}[
+    scale=0.85,
+    title/.style={draw,font=\bfseries},
+    single/.style={draw,circle,fill=white},
+    bar/.style={cap=round,double,double distance=18pt},
+    nostrike/.style={line width=.8mm},
+    cm={0,-0.8,1,0,(0,0)}
+  ]
+  \setcounter{chords-string}{6}
+  \foreach \tuning in \chordtuning
+  {
+    \node at (\value{chords-string},\chordfretstart-1) {\tuning};
+    \addtocounter{chords-string}{-1}
+  }
+  \draw[yshift=-0.5cm] (1,\chordfretstart) grid (6,\chordfretend+1);
+
+  \foreach \fret in {\chordfretstart,...,\chordfretend}
+  {
+    \setcounter{chords-fret}\fret
+    \draw node at (0,\fret) {\Roman{chords-fret}};
+  }
+}
+{
+  \end{tikzpicture}
+}
