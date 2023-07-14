@@ -1,5 +1,5 @@
-\documentclass[a6paper,
-              paper=landscape,
+\documentclass[a5paper,
+              %paper=landscape,
               12pt,
               pagesize,
               typearea,
@@ -12,10 +12,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-              
 
+%Für Akkord-Grafiken
+\usepackage{subfig}
+\usepackage{tikz}
+              
+              
 %Zusätzliche Beschnittzugabe zum DinA6 Format dazu
-\usepackage[cam, noinfo, width=15.4truecm,height=11.1truecm, center]{crop}
+%\usepackage[cam, noinfo, width=15.4truecm,height=11.1truecm, center]{crop}
 
 %Überschriftenabstände
 \usepackage{titlesec}
@@ -23,7 +27,7 @@
 %Kopf- und Fußzeilen
 \usepackage{fancyhdr}
 
-%Schrift
+%Schrift(en)
 \usepackage[sfdefault]{AlegreyaSans}
 
 %Gitarrenakkorde
@@ -33,7 +37,7 @@
 \usepackage{makeidx}
 
 %Strophennummerierung
-\usepackage{enumitem}
+%\usepackage{enumitem}
 
 %PDF-Dateien einbinden 
 \usepackage{pdfpages}
@@ -41,13 +45,13 @@
 %Layoutgeraffel
 %may the latex masters be gentle and hope that they won't take this clusterf**k personal - but it works
 %setting up the layout spacing 
-\areaset[10mm]{130 mm}{82 mm}
+\areaset[10mm]{130 mm}{179 mm}
 \topmargin=-21.4mm 
 \headheight=5.5mm
 \headsep=2.5mm
 \footskip=6mm
 \setlength{\parindent}{0em}
-\setlist[enumerate]{topsep=0pt, itemsep=5pt, partopsep=-10pt, parsep=5pt, wide, labelwidth=!, labelindent=0pt, label=\bfseries{\arabic*.}}
+%\setlist[enumerate]{topsep=0pt, itemsep=5pt, partopsep=-10pt, parsep=5pt, wide, labelwidth=!, labelindent=0pt, label=\bfseries{\arabic*.}}
 \setcounter{secnumdepth}{0}
 
 \setlength\parskip{1\baselineskip plus 1\baselineskip minus 0.15\baselineskip}
@@ -63,8 +67,10 @@
 \fancypagestyle{plain}{\fancyhf{}%
   \renewcommand{\headrulewidth}{0pt}
 }
-\renewcommand{\footrulewidth}{0.4pt}% default is 0pt
+
+%Separiert Kopfzeile und Fußzeile einer Seite mit einem horizontalen Strich
 \renewcommand{\headrulewidth}{0.4pt}% default is 0pt
+%\renewcommand{\footrulewidth}{0.4pt}% default is 0pt
 
 %Befehlesetup
 \newcommand{\whzl}{\raisebox{-1mm}{\hspace{0.3mm}\rule{0.3mm}{4mm}\hspace{0.3mm}\rule{0.1mm}{4mm}\hspace{0.2mm}}:}
@@ -78,23 +84,109 @@
                           }
                           \newpage 
 }
+
+%%
+%% Seiten-Setups
+%%
 \newcommand{\LiedSetup}{ 
                         \noindent
                         \section{\Titel}
                         \fancyhead[RE,LO]{\nouppercase{\Titel}}
-                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
-                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+%                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+                        \fancyfoot[LO,RE]{\thepage}
+}\newcommand{\AkkordeSetup}{ 
+%                        \noindent
+%                        \section{\Titel}
+                        \fancyhead[RE,LO]{\nouppercase{\Titel}}
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+%                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
                         \fancyfoot[LO,RE]{\thepage}
 }
-\newcommand{\GeistlichSetup}{
+\newcommand{\EinSchnellesLiedSetup}{
                         \noindent
                         \section{\Titel}
                         \fancyhead[RE,LO]{\nouppercase{\Titel}}
-                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
-                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
+%                        \fancyhead[RO,LE]{\small{\nouppercase{\Interpret}}} 
+%                        \fancyfoot[LE,RO]{\small{\nouppercase{\Referenz}}} 
                         \fancyfoot[LO,RE]{\thepage}
                         \addcontentsline{lof}{section}{\Titel}
-}                            
+}   
+
+%%
+%% Akkorde
+%% Code from chords.sty
+%% Modified and extended by Paddy
+%%
+
+% Counters
+\newcounter{chords-string}
+\newcounter{chords-fret}
+
+% Variables
+\newcommand{\chordreset}{
+  \def\chordtuning{E,A,D,G,B,E}
+  \def\chordfretstart{1}
+  \def\chordfretend{4}
+}
+\chordreset
+
+% The chord environmant
+% \begin{chord}
+% \begin{chord}[D,G,D,G,H,E]
+\newenvironment{chord}
+{
+  % Chord name
+  % \chordname <chordname>
+  \newcommand{\chordname}[1]{
+    \draw node[title] at (0,0) {##1};
+  }
+
+  % A single note
+  % \single <string> <fret> <finger>
+  \newcommand{\single}[3]{
+    \draw node[single] at (##1,##2) {##3};
+  }
+  % A bar
+  % \bar <startstring> <fret> <finger>
+  \renewcommand{\bar}[3]{
+    \draw[bar] (##1,##2) -- node[midway] {##3} (1,##2);
+  }
+  % No strike
+  % \nostrike <string>
+  \newcommand{\nostrike}[1]{
+    \draw[nostrike] (##1,\chordfretstart-.5) +(-135:.2cm) -- +(45:.2cm);
+    \draw[nostrike] (##1,\chordfretstart-.5) +(135:.2cm) -- +(-45:.2cm);
+  }
+  \begin{tikzpicture}[
+    scale=0.85,
+    title/.style={draw,font=\bfseries},
+    single/.style={draw,circle,fill=white},
+    bar/.style={cap=round,double,double distance=18pt},
+    nostrike/.style={line width=.8mm},
+    cm={0,-0.8,1,0,(0,0)}
+  ]
+  \setcounter{chords-string}{6}
+  \foreach \tuning in \chordtuning
+  {
+    \node at (\value{chords-string},\chordfretstart-1) {\tuning};
+    \addtocounter{chords-string}{-1}
+  }
+  \draw[yshift=-0.5cm] (1,\chordfretstart) grid (6,\chordfretend+1);
+
+  \foreach \fret in {\chordfretstart,...,\chordfretend}
+  {
+    \setcounter{chords-fret}\fret
+    \draw node at (0,\fret) {\Roman{chords-fret}};
+  }
+}
+{
+  \end{tikzpicture}
+}
+
+%%
+%% Liederbuch Start
+%%                    
 
 \makeindex
 
@@ -120,27 +212,30 @@
 
       \newpage
 
-    %Das Inhaltsverzeichnis  
-    \tableofcontents
-    \newpage
- 
-
     %Seitenrahmen einrichtung
     \pagenumbering{arabic}
     \fancyhf{}
     \pagestyle{fancy}
     
+    %Das Ein schnelles Lied! fasst alle entsprechend markierten Lieder in einem weiteren Inhaltsverzeichnis zusammen
+    \renewcommand\listfigurename{Ein schnelles Lied!}
+    %\addcontentsline{toc}{chapter}{\listfigurename{}}
+    \listoffigures
+    \printindex
+    
     % Dieses Template enhält nur ein einziges Lied. Wegen Liedrechten und solchen Dingen
     \include{lieder/Die-Gedanken-sind-frei}
+    
+    % Akkord-Seiten einfügen
+    \include{Akkorde}
     
 
     \pagestyle{empty}
 
-    %Das Kuratenverzeichnis fasst alle entsprechend markierten Lieder in einem weiteren Inhaltsverzeichnis zusammen
-    \renewcommand\listfigurename{Kuratenverzeichnis}
-    \addcontentsline{toc}{chapter}{\listfigurename{}}
-    \listoffigures
-    \printindex
+
+    %Das Inhaltsverzeichnis  
+    \tableofcontents
+    \newpage
 
 
     %Leerer hinterer Klappentext
